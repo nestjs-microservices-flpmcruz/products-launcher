@@ -10,3 +10,6 @@
 [submodule "payments-ms"]
 	path = payments-ms
 	url = https://github.com/nestjs-microservices-flpmcruz/payments-ms.git
+[submodule "auth-ms"]
+	path = auth-ms
+	url = https://github.com/flpmcruz/auth-ms.git
