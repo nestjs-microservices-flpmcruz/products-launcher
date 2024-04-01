@@ -34,7 +34,12 @@ docker build -f dockerfile.prod -t auth-ms .
 docker build -f dockerfile.prod -t us-east1-docker.pkg.dev/airy-gate-419018/image-registry/auth-ms .
 docker image push us-east1-docker.pkg.dev/airy-gate-419018/image-registry/auth-ms
 
-# Build de producción
+# Build de producción de todas las imagenes
 docker compose -f .\docker-compose.prod.yml build
+
+# Add permissions to Cloud Build to access Secret Manager
+gcloud projects add-iam-policy-binding airy-gate-419018 `
+    --member=serviceAccount:813295309498@cloudbuild.gserviceaccount.com `
+    --role=roles/secretmanager.secretAccessor
 ```
 
