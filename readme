@@ -29,6 +29,12 @@ Si se hace al revés, se perderán las referencias de los sub-módulos en el rep
 
 
 ```sh
+# Build images one by one
+docker build -f dockerfile.prod -t auth-ms .
+docker build -f dockerfile.prod -t us-east1-docker.pkg.dev/airy-gate-419018/image-registry/auth-ms .
+docker image push us-east1-docker.pkg.dev/airy-gate-419018/image-registry/auth-ms
+
 # Build de producción
 docker compose -f .\docker-compose.prod.yml build
 ```
+
