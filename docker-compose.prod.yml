@@ -9,7 +9,7 @@ services:
     build: 
       context: ./client-gateway
       dockerfile: dockerfile.prod
-    image: client-gateway-prod
+    image: "us-east1-docker.pkg.dev/airy-gate-419018/image-registry/client-gateway"
     ports:
       - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}
     environment:
@@ -20,7 +20,7 @@ services:
     build: 
       context: ./auth-ms
       dockerfile: dockerfile.prod
-    image: auth-ms-prod
+    image: "us-east1-docker.pkg.dev/airy-gate-419018/image-registry/auth-ms"
     environment:
       - PORT=3000
       - NATS_SERVERS=${NATS_SERVERS}
@@ -31,7 +31,7 @@ services:
     build: 
       context: ./products-ms
       dockerfile: dockerfile.prod
-    image: products-ms-prod
+    image: "us-east1-docker.pkg.dev/airy-gate-419018/image-registry/products-ms"
     environment:
       - PORT=3000
       - NATS_SERVERS=${NATS_SERVERS}
@@ -44,7 +44,7 @@ services:
       args:
         # argumento de contrucción
         - ORDERS_DATABASE_URL=${ORDERS_DATABASE_URL}
-    image: orders-ms-prod
+    image: "us-east1-docker.pkg.dev/airy-gate-419018/image-registry/orders-ms"
     environment:
       - PORT=3000
       - NATS_SERVERS=${NATS_SERVERS}
@@ -54,7 +54,7 @@ services:
     build: 
       context: ./payments-ms
       dockerfile: dockerfile.prod
-    image: payments-ms-prod
+    image: "us-east1-docker.pkg.dev/airy-gate-419018/image-registry/payments-ms"
     ports:
       - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}
     environment:
