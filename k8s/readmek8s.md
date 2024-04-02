@@ -68,3 +68,75 @@ kubectl create -f <nombre>.yml
 ```
 
 
+# Setup an ingress controller and Cert Manager in Digital Ocean
+```sh
+# https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-on-digitalocean-kubernetes-using-helm
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install nginx-ingress ingress-nginx/ingress-nginx --set controller.publishService.enabled=true
+kubectl --namespace default get services -o wide -w nginx-ingress-ingress-nginx-controller
+
+# Point the domain to the LoadBalancer IP
+
+# Create an ingress resource
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-kubernetes-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: "hw1.your_domain_name"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: service-name-you-want-to-expose
+            port:
+              number: 3000
+```
+
+
+# Secure the Ingress with Cert Manager
+```sh
+kubectl create namespace cert-manager
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.10.1 --set installCRDs=true
+
+# Create a ClusterIssuer
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    # Email address used for ACME registration
+    email: your_email_address
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # Name of a secret used to store the ACME account private key
+      name: letsencrypt-prod-private-key
+    # Add a single challenge solver, HTTP01 using nginx
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+
+# Actualizar el Ingress para que use el certificado
+annotations:
+  kubernetes.io/ingress.class: nginx
+  cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+  - hosts:
+    - hw1.your_domain_name.com
+    secretName: kubernetes-tls
+
+# Verificar el estado del certificado
+kubectl describe certificate kubernetes-tls
+```
