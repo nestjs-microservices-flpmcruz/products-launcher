@@ -13,7 +13,7 @@ spec:
     - ingress.cubaneden.com
     - webhook.cubaneden.com
     - py.cubaneden.com
-    secretName: kubernetes-tls
+    secretName: kubernetes-tls # Secret name for the TLS certificate
   rules:
   - host: "ingress.cubaneden.com"
     http:
@@ -32,6 +32,6 @@ spec:
         path: "/"
         backend:
           service:
-            name: lb-service
+            name: grafana
             port:
               number: 80
